@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--<html manifest="cache-manifest">-->
+<html>
+<head>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="icon.png"/>
+    <link rel="apple-touch-startup-image" href="startup.png" />
+    <link rel="stylesheet" href="../Themes/apple/main.css" type="text/css" media="screen, mobile" title="main" charset="utf-8">
+    <title>Test app</title>
+	<script type="text/javascript" src="../Assets/mootools.core.js"></script>
+	<script type="text/javascript">
+		
+		var Moobile = {version: "0.1-dev"};
+		
+		var UI = {};
+		
+		UI.Element = new Class({
+			Implements: Options,
+			
+			options: {},
+			
+			container: null,
+			
+			initialize: function(conf){
+				this.setOptions(conf);
+				this.container = this.makeContainer();
+			},
+			
+			setTitle: function(title){
+				this.container.set('html', title);
+				return this;
+			},
+			
+			setContent: function(content){
+				this.container.set('html', title);
+				return this;
+			},
+			
+			addElement: function(el){
+				this.container.grab(el);
+				return this;
+			},
+			
+			toElement: function(){
+				return this.container;
+			},
+			
+			inject: function(el, place){
+				this.container.inject(el, place);
+				return this;
+			}
+		});
+		
+		UI.Toolbar = new Class({
+			Extends: UI.Element,
+			
+			initialize: function(conf){
+				this.parent(conf);
+			},
+			
+			makeContainer: function(){
+				return new Element('div').addClass('toolbar').grab(new Element('h1'));
+			},
+			
+			setTitle: function(title){
+				this.container.getElement('h1').set('html', title);
+				return this;
+			}
+		});
+		
+		UI.Button = new Class({
+			Extends: UI.Element,
+			
+			initialize: function(conf){
+				this.parent(conf);
+			},
+			
+			makeContainer: function(){
+				var el = new Element('a').set('href', '#');
+				if(this.options.type == 'back'){
+					el.addClass('back');
+				} else {
+					el.addClass('button');
+				}
+				return el;
+			}
+		});
+		
+		UI.Info = new Class({
+			Extends: UI.Element,
+			
+			initialize: function(conf){
+				this.parent(conf);
+			},
+			
+			makeContainer: function(){
+				return new Element('div').addClass('info').grab(new Element('p'));
+			},
+			
+			setContent: function(content){
+				this.container.getElement('p').set('html', content);
+				return this;
+			}
+		});
+		
+		var slide = function(fromPage, toPage, backwards) {
+			$$(fromPage, toPage).addEvent('webkitAnimationEnd', function(){
+				fromPage.removeClass(animation).removeClass('in').removeClass('out').removeClass('reverse').removeClass('active');
+				toPage.removeClass(animation).removeClass('in').removeClass('out').removeClass('reverse').addClass('active');
+			});
+			
+			var animation = backwards ? fromPage.get('animation') : toPage.get('animation');
+			animation = animation ? animation + ' ' : 'slide ';
+			
+			toPage.addClass(animation + 'in active' + (backwards ? ' reverse' : ''));
+			fromPage.addClass(animation + 'out' + (backwards ? ' reverse' : ''));
+		}
+		
+		$(document).addEvent('domready', function(){
+			Element.NativeEvents.webkitTransitionEnd = 1;
+			Element.NativeEvents.webkitAnimationEnd = 1;
+			
+			//new UI.Toolbar().setTitle('Moobile').addElement(new UI.Button().setTitle('Button')).addElement(new UI.Button({type: 'back'}).setTitle('Back')).inject($('home'), 'top');
+			//new UI.Info().setContent($('code').get('html')).inject($('home'), 'bottom');
+			$$('ul a').addEvent('click', function(){
+				slide($('home'), $('second-page'))
+				
+				return false;
+			});
+			
+			$$('a.back').addEvent('click', function(){
+				slide($('second-page'), $('home'), true);
+				
+				return false;
+			});
+			
+			$$('a.about').addEvent('click', function(){
+				slide($$('div.page.active'), $('about'));
+				
+				return false;
+			});
+			
+			$$('a.close').addEvent('click', function(){
+				slide($$('div.page.active'), $('home'), true);
+				
+				return false;
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="home" class="page active" animation="slide">
+	    <div class="toolbar">
+            <h1>Moobile</h1> 
+            <a class="button about" href="#about">About</a> 
+        </div>
+        <ul class="list rounded"> 
+            <li class="arrow"><a href="#">List item 1</a></li> 
+            <li class="arrow">Not a link</li> 
+            <li class="arrow"><a href="#">List item 2</a></li> 
+            <li class="arrow"><a href="#">List item 3 bla bla bla bla bla bla bla bla</a> </li>
+        </ul>
+	    <div class="info right"> 
+            <div>Moobile</div>
+        </div> 
+    </div>
+	<div id="second-page" class="page" animation="slide">
+	    <div class="toolbar">
+			<a class="button back" href="#back">Back</a> 
+            <h1>Second page</h1> 
+            <a class="button" href="#about">About</a> 
+        </div>
+	    <div class="info"> 
+            Second page
+        </div> 
+    </div>
+	<div id="about" class="page" animation="slideup">
+		<div class="info"> 
+            <div>About</div><br />
+			<a class="button close">Close</a> 
+        </div> 
+	</div>
+	
+	<div class="toolbar-bottom">aaa</div>
+</body>
+</html>
