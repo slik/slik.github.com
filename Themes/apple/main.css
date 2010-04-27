@@ -23,7 +23,7 @@ body {
     height: 100%;
 }
 
-body > *:not(div.toolbar-bottom) {
+body > * {
     background: rgb(197,204,211) url(img/pinstripes.png);
     -webkit-backface-visibility: hidden;
     -webkit-box-sizing: border-box;
