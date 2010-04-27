@@ -7,10 +7,6 @@
     padding: 0;
 }
 
-html {
-    height: 100%;
-}
-
 body {
     background: rgb(249,249,249);
     margin: 0;
@@ -20,7 +16,6 @@ body {
     font-family: Helvetica;
     -webkit-perspective: 800;
     -webkit-transform-style: preserve-3d;
-    height: 100%;
 }
 
 body > * {
@@ -31,6 +26,7 @@ body > * {
     position: absolute;
     min-height: 420px !important;
     -webkit-transform: translate3d(0,0,0) rotate(0) scale(1);
+    height: 100%;
 }
 
 h1, h2 {
